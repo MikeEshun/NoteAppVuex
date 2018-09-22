@@ -36,7 +36,6 @@ const store = new Vuex.Store({
   getters
 });
 
-
 const inputComponent = {
   template: `
     <input 
@@ -45,18 +44,19 @@ const inputComponent = {
       @keyup.enter="monitorEnterKey"
       class="input is-small" type="text" 
     />
-    `,
-    data: () => ({
-      input: ''
-    }),
-    methods: {
-      monitorEnterKey() {
-        this.$store.dispatch( 'addNote', this.input );
-        this.$store.dispatch( 'addTimeStamp', new Date().toLocaleString() );
-        this.input = '';
-      },
+  `,
+  data: () => ({
+    input: ''
+  }),
+  methods: {
+    monitorEnterKey() {
+      this.$store.dispatch( 'addNote', this.input );
+      this.$store.dispatch( 'addTimeStamp', new Date().toLocaleString() );
+      this.input = '';
     },
-};
+    }
+}
+
 
 const noteCountComponent = {
   template: `
