@@ -4,13 +4,13 @@ const state = {
 };
 
 const mutations = {
-  ADD_NOTES( state, payload ) {
+  ADD_NOTE( state, payload ) {
     let newNote = payload;
     state.notes.push(newNote);
   },
   ADD_TIMESTAMP( state, payload ) {
     let newTimeStamp = payload;
-    state.notes.push(newTimeStamp);
+    state.timestamps.push(newTimeStamp);
   },
 };
 
@@ -19,7 +19,7 @@ const actions = {
     context.commit( 'ADD_NOTE', payload );
   },
   addTimeStamp( context, payload ){
-    context.commit( 'ADD_TIMETSAMP', payload );
+    context.commit( 'ADD_TIMESTAMP', payload );
   },
 }
 
@@ -37,12 +37,53 @@ const store = new Vuex.Store({
 });
 
 
+const inputComponent = {
+  template: `
+    <input 
+      placeholder='Enter a note'
+      v-model="input"
+      @keyup.enter="monitorEnterKey"
+      class="input is-small" type="text" 
+    />
+    `,
+    data: () => ({
+      input: ''
+    }),
+    methods: {
+      monitorEnterKey() {
+        this.$store.dispatch( 'addNote', this.input );
+        this.$store.dispatch( 'addTimeStamp', new Date().toLocaleString() );
+        this.input = '';
+      },
+    },
+};
 
+const noteCountComponent = {
+  template: `
+    <div class="column has-text-centered">
+      Note count: <strong>{{ noteCount }}</strong>
+    </div>
+  `,
+  computed: {
+    noteCount() {
+      return this.$store.getters.getNoteCount;
+    }
+  }
+}
 
 new Vue({
   el: '#app',
   store,
+  computed: {
+    notes() {
+      return this.$store.getters.getNotes;
+    },
+    timestamps() {
+      return this.$store.getters.getTimeStamps;
+    },
+  },
   components: {
-    'input-component': inputComponent
+    'input-component': inputComponent,
+    'note-count-component': noteCountComponent,
   }
 })
